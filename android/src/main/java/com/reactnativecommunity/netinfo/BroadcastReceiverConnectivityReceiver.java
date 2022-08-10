@@ -52,19 +52,39 @@ public class BroadcastReceiverConnectivityReceiver extends ConnectivityReceiver 
         }
     }
 
+    public boolean hasNetwork() {
+        boolean isNetwork = false;
+        //ConnectivityManager connManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        if (getConnectivityManager() != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
+                NetworkCapabilities networkCapabilities = getConnectivityManager().getNetworkCapabilities(getConnectivityManager().getActiveNetwork());
+                if (networkCapabilities != null) {
+                    isNetwork = networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED);
+                }
+            } else {
+                NetworkInfo activeNetInfo = getConnectivityManager().getActiveNetworkInfo();
+                if (activeNetInfo == null) {
+                    isNetwork = activeNetInfo.isAvailable();
+                }
+            }
+        }
+        return isNetwork;
+    }
+
     @SuppressLint("MissingPermission")
     private void updateAndSendConnectionType() {
         ConnectionType connectionType = ConnectionType.UNKNOWN;
         CellularGeneration cellularGeneration = null;
         boolean isInternetReachable = false;
-
         try {
+            boolean networkIsUp = hasNetwork();
             NetworkInfo networkInfo = getConnectivityManager().getActiveNetworkInfo();
-            if (networkInfo == null || !networkInfo.isConnected()) {
+
+            if (networkInfo == null || !networkIsUp) {
                 connectionType = ConnectionType.NONE;
             } else {
                 // Check if the internet is reachable
-                isInternetReachable = networkInfo.isConnected();
+                isInternetReachable = networkIsUp;
 
                 // Get the connection type
                 int networkType = networkInfo.getType();
