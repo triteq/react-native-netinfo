@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.NetworkCapabilities;
 import android.net.NetworkInfo;
 import com.facebook.react.bridge.ReactApplicationContext;
 import com.reactnativecommunity.netinfo.types.CellularGeneration;

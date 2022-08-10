@@ -118,9 +118,9 @@ public abstract class ConnectivityReceiver {
             mConnectionType = connectionType;
             mCellularGeneration = cellularGeneration;
             mIsInternetReachable = isInternetReachable;
-            if (hasListener) {
+            //if (hasListener) {
                 sendConnectivityChangedEvent();
-            }
+            //}
         }
     }
 
